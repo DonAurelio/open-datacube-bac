@@ -1,0 +1,8 @@
+datacube/datasets_storage/*
+datacube/ingested_storage/*
+
+database/database_storage/*
+
+!datacube/datasets_storage/README.MD
+!datacube/ingested_storage/README.MD
+
