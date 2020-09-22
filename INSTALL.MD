@@ -1,11 +1,90 @@
 # Manual Despliegue Open Data Cube (ODC) 1.8.2 - Contenedores
 
-Clone el siguiente repositorio
-Clone this repository and get into the **open-datacube-workshop/version_1.8.2** foder.
+A continuación se presentan los pasos requeridos para el despliegue del cubo de datos.
+
+### Instalación de Requerimientos (CentOS 8)
+
+Instalación de Docker
+
+```sh 
+sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+dnf install docker-ce --nobest -y
+systemctl start docker
+systemctl enable docker
+sudo usermod -aG docker $USER
+```
+
+Reinicie el sistema
+
+```sh 
+sudo reboot now
+```
+
+Verifique que Docker funcione correctamente
+
+```sh 
+docker run hello-world
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
+
+Instalar Docker Compose
+
+```sh 
+sudo dnf install curl -y
+sudo curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+Verificar instalación de Docker Compose 
+
+```sh 
+docker-compose -version 
+
+docker-compose version 1.25.0, build 0a186604
+```
+
+### Configuración Esquema de Directorios
+
+Use los siguientes comandos para crear el esquema de directorios para el ODC.
+
+```sh 
+sudo mkdir mnt/datasets_storage mnt/ingested_storage mnt/analysis_storage mnt/database_storage
+sudo chown $USER:root mnt/datasets_storage mnt/ingested_storage mnt/analysis_storage mnt/database_storage
+```
+
+Clone el siguiente repositorio.
 
 ```sh 
 git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
+
+Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
+
+```sh 
+cp -r open-datacube-bac/datasets_storage/* /mnt/datasets_storage
+```
+
+### Despliegue de Contenedores
 
 Ingrese al directorio `open-datacube-bac`
 
@@ -73,30 +152,41 @@ Ejecute el siguiente comando pasa salir del contenedor **datacube**
 datacube@487239d46d68:~$ exit
 ```
 
-### Definición de Productos
+### Configuración Componente Explorer
+
+Ingrese al contenedor **explorer**
+
+```sh
+docker-compose exec explorer bash
+```
+
+Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestado en el cubo de datos. Cuando tenga datos que cumplan con el requerimiento anterior, puede ejecutar el comando siguiente para generar la visualización del contendo disponible en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental al cubo de datos. El usuraio es libre de usar mecanismos como **crontab** para programar esta tarea. Las visualizaciones se generan empleando el siguiente comando.
+
+
+```sh
+cubedash-gen --init --all
+```
+
+
+### Configuración Componente Ingestor
 
 Para indexar/ingestar escenas de un determinado satelite se debe crear un producto en el cubo de datos. Un producto debe ser creado por cada satelite. A continuación se muestran los pasos para la creación del Producto `ls8_collections_sr_scene`.
 
-Ingrese al contenedor **datacube**
+Ingrese al contenedor **ingestor**
 
 ```sh
-docker-compose exec datacube bash
+docker-compose exec ingestor bash
 ```
 
 Liste los archivos de la carpeta `products`
 
 ```sh
-datacube@b5d6c817587a:~$ ls -l products/
+datacube@b5d6c817587a:~$ ls -l /datasets_storage
 
-total 20
-drwxr-xr-x 2 datacube datacube 4096 Jul 20 23:21 LS5_TM_LEDAPS
-drwxr-xr-x 2 datacube datacube 4096 Jul 21 00:23 LS7_ETM_LEDAPS
 drwxr-xr-x 2 datacube datacube 4096 Jul 20 15:37 LS8_OLI_LASRC
--rw-rw-r-- 1 datacube datacube 1143 Jul 21 03:57 README.MD
-drwxr-xr-x 2 datacube datacube 4096 Jul 21 00:23 S1_SAR_GAMMA0
 ```
 
-En la carpeta `products` va a encontrar los archivos necesarios para definir un producto, indexar un escena que corresponda al producto creado, y ingestar (opcional). Use el comando que se muestra a continaución para listar los productos creados en el cubo de datos. 
+En la carpeta `/datasets_storage/LS8_OLI_LASRC` va a encontrar los archivos necesarios para definir un producto, indexar un escena que corresponda al producto creado, y ingestar (opcional). Use el comando que se muestra a continaución para listar los productos creados en el cubo de datos. 
 
 
 ```sh
@@ -107,7 +197,7 @@ datacube@b5d6c817587a:~$ datacube product list
 Dado que tiene una instalación nueva del cubo, aún no tiene productos definidos, por tal motivo el comando anterior mostró un listado vacío. A continuación use comando mostrado abajo para crear el producto `ls8_collections_sr_scene`.
 
 ```sh
-datacube@b5d6c817587a:~$ datacube product add products/LS8_OLI_LASRC/description_file.yml
+datacube@b5d6c817587a:~$ datacube product add /datasets_storage/LS8_OLI_LASRC/description_file.yml
 
 Adding "ls8_collections_sr_scene" (this might take a while) DONE
 ```
@@ -126,7 +216,4 @@ Ejecute el siguiente comando pasa salir del contenedor **datacube**
 ```sh 
 datacube@487239d46d68:~$ exit
 ```
-
-### Indexa de Escenas
-
 
