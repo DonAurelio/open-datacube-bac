@@ -4,6 +4,12 @@ A continuación se presentan los pasos requeridos para el despliegue del cubo de
 
 ### Instalación de Requerimientos (CentOS 8)
 
+Instalación de Git
+
+```sh 
+sudo dnf install -y git
+```
+
 Instalación de Docker
 
 ```sh 
@@ -68,8 +74,8 @@ docker-compose version 1.25.0, build 0a186604
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
 ```sh 
-sudo mkdir mnt/datasets_storage mnt/ingested_storage mnt/analysis_storage mnt/database_storage
-sudo chown $USER:root mnt/datasets_storage mnt/ingested_storage mnt/analysis_storage mnt/database_storage
+sudo mkdir /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo chown $USER:root /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
 ```
 
 Clone el siguiente repositorio.
@@ -130,6 +136,40 @@ Checking indexes/views.
 Done.
 ```
 
+Si al usar el comando `datacube system init` obtiene el error mostrado abajo, entonces realice la configuración mostrada a continuación.
+
+```sh 
+  File "/usr/local/lib/python3.6/dist-packages/sqlalchemy/engine/strategies.py", line 114, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/usr/local/lib/python3.6/dist-packages/sqlalchemy/engine/default.py", line 493, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/usr/local/lib/python3.6/dist-packages/psycopg2/__init__.py", line 127, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not connect to server: No route to host
+	Is the server running on host "database" (172.19.0.2) and accepting
+	TCP/IP connections on port 5432?
+```
+
+Edite el archivo `/etc/firewalld/firewalld.conf`  y cambie la linea `FirewallBackend=nftables` por `FirewallBackend=iptables`.
+
+```sh 
+sudo nano /etc/firewalld/firewalld.conf
+
+# FirewallBackend
+# Selects the firewall backend implementation.
+# Choices are:
+#       - nftables (default)
+#       - iptables (iptables, ip6tables, ebtables and ipset)
+#FirewallBackend=nftables
+FirewallBackend=iptables
+```
+
+Reinicie el Firewall y vuelva a aplicar el comando `datacube system init`
+
+```sh 
+sudo systemctl restart firewalld.service
+```
+
 Verfifique que el cubo de datos ha sido correctamente configurado usando el siguiente comando.
 
 ```sh 
@@ -152,6 +192,9 @@ Ejecute el siguiente comando pasa salir del contenedor **datacube**
 datacube@487239d46d68:~$ exit
 ```
 
+Ingrese a la siguiente URL http://<ip-cube-server>:8081/ para acceder a la interfaz de Jupyter Noternotebooks e inicar el desarrollo de algoirtmos.
+
+
 ### Configuración Componente Explorer
 
 Ingrese al contenedor **explorer**
@@ -160,60 +203,66 @@ Ingrese al contenedor **explorer**
 docker-compose exec explorer bash
 ```
 
-Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestado en el cubo de datos. Cuando tenga datos que cumplan con el requerimiento anterior, puede ejecutar el comando siguiente para generar la visualización del contendo disponible en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental al cubo de datos. El usuraio es libre de usar mecanismos como **crontab** para programar esta tarea. Las visualizaciones se generan empleando el siguiente comando.
-
-
-```sh
-cubedash-gen --init --all
-```
-
-
-### Configuración Componente Ingestor
-
-Para indexar/ingestar escenas de un determinado satelite se debe crear un producto en el cubo de datos. Un producto debe ser creado por cada satelite. A continuación se muestran los pasos para la creación del Producto `ls8_collections_sr_scene`.
-
-Ingrese al contenedor **ingestor**
-
-```sh
-docker-compose exec ingestor bash
-```
-
-Liste los archivos de la carpeta `products`
-
-```sh
-datacube@b5d6c817587a:~$ ls -l /datasets_storage
-
-drwxr-xr-x 2 datacube datacube 4096 Jul 20 15:37 LS8_OLI_LASRC
-```
-
-En la carpeta `/datasets_storage/LS8_OLI_LASRC` va a encontrar los archivos necesarios para definir un producto, indexar un escena que corresponda al producto creado, y ingestar (opcional). Use el comando que se muestra a continaución para listar los productos creados en el cubo de datos. 
-
-
-```sh
-datacube@b5d6c817587a:~$ datacube product list
-
-```
-
-Dado que tiene una instalación nueva del cubo, aún no tiene productos definidos, por tal motivo el comando anterior mostró un listado vacío. A continuación use comando mostrado abajo para crear el producto `ls8_collections_sr_scene`.
-
-```sh
-datacube@b5d6c817587a:~$ datacube product add /datasets_storage/LS8_OLI_LASRC/description_file.yml
-
-Adding "ls8_collections_sr_scene" (this might take a while) DONE
-```
-
-Liste de nuevo los produtos definidos en el cubo de datos. Debería obtener un listado con los productos definidos hasta el momento en el cubo de datos.
-
-
-```sh
-datacube@b5d6c817587a:~$ datacube product list 
-
-ls8_collections_sr_scene  Landsat 8 USGS Collection 1 Higher Level SR scene proessed using LaSRC. 30m UTM based projection.
-```
-
-Ejecute el siguiente comando pasa salir del contenedor **datacube**
+Clone el siguiente repositorio.
 
 ```sh 
-datacube@487239d46d68:~$ exit
+git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
 
+Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual 
+
+```sh
+cp -r open-datacube-bac/explorer .
+```
+
+Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestado en el cubo de datos. Cuando tenga datos que cumplan con el requerimiento anterior, puede ejecutar el comando siguiente para generar la visualización del contendo disponible en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental.
+
+Cree un **cronjob** para automatizar el proceso de generación de vistas del Open Data Cube.
+
+```sh
+crontab -e
+```
+
+Coloque **solo una** de las siguientes lineas al final del archivo para programar la tarea periódica de actualización de las visualizaciones del Open Data Cube.
+
+* Cada Minuto: `*/1 * * * * /bin/bash /home/datacube/explorer/cubedash.sh`
+* Cada Hora: `0 * * * * /bin/bash /home/datacube/explorer/cubedash.sh`
+* Cada Día a la 1 AM: `0 1 * * * /bin/bash /home/datacube/explorer/cubedash.sh` 
+
+```sh 
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+0 1 * * * /bin/bash /home/datacube/explorer/cubedash.sh
+```
+
+Inicie el servicio `cron` usando el siguiente comando. Cada que el contenedor sea reiniciado, debe volver a ejecutar el comando. 
+
+```sh 
+sudo cron 
+```
+
+Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL http://<ip-cube-server>:8080/ para acceder a la interfaz de visualización del contenido del Open Dat Cube.
+
+## Referencias 
+
+1. [DNS Not Resolving under Network [CentOS8]](https://github.com/docker/for-linux/issues/957)
