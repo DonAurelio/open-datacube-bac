@@ -39,7 +39,6 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - ./datacube/products:/home/datacube/products
       - ./datacube/datasets_storage:/datasets_storage
       - ./datacube/ingested_storage:/ingested_storage
     environment:
@@ -60,7 +59,6 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - ./datacube/products:/home/datacube/products
       - ./datacube/analysis_storage:/analysis_storage
       - ./datacube/datasets_storage:/datasets_storage
       - ./datacube/ingested_storage:/ingested_storage

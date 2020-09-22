@@ -32,7 +32,7 @@ open-datacube-bac_explorer_1   entrypoint.sh gunicorn -b  ...   Up      0.0.0.0:
 open-datacube-bac_ingestor_1   entrypoint.sh tail -F /hom ...   Up      0.0.0.0:2221->22/tcp  
 ```
 
-### Inicialización Base de Datos ODC 1.8.2 
+### Configuración Componente datacube
 
 Ingrese al contenedor **datacube**
 
@@ -120,3 +120,13 @@ datacube@b5d6c817587a:~$ datacube product list
 
 ls8_collections_sr_scene  Landsat 8 USGS Collection 1 Higher Level SR scene proessed using LaSRC. 30m UTM based projection.
 ```
+
+Ejecute el siguiente comando pasa salir del contenedor **datacube**
+
+```sh 
+datacube@487239d46d68:~$ exit
+```
+
+### Indexa de Escenas
+
+

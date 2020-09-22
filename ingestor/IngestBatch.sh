@@ -27,7 +27,7 @@ then
 	threads=$( expr $(grep -c ^processor /proc/cpuinfo) - 1)
 	if [ $threads -eq 0 ] ; then $threads = 1; fi
 
-	export GDAL_DATA="${GDAL_DATA:-/usr/share/gdal/2.3}"
+	# export GDAL_DATA="${GDAL_DATA:-/usr/share/gdal/2.3}"
 	nimg=0
 
 	echo "=> Entry into the $baseIngestPath"
@@ -36,7 +36,7 @@ then
 	for archivo in *.tar.gz
 	do
 		echo "=> $archivo found."
-		folder="/source_storage/tmp/${archivo%%-*}"
+		folder="/datasets_storage/tmp/${archivo%%-*}"
 		 
 		echo "=> Unzip $archivo into $folder"
 		mkdir -p $folder && tar -xzf $archivo -C $folder
@@ -52,16 +52,16 @@ then
 		then 
 			echo "=> Ingestion will be performed using $threads threads"
 			datacube -v ingest --allow-product-changes --executor multiproc $threads -c $ingestConfigFile
-			rm -rf "/source_storage/tmp/"
+			rm -rf "/datasets_storage/tmp/"
 		fi
 	done
 
 
 	echo "Ingestion will be performed using $threads threads"
 	datacube -v ingest --allow-product-changes --executor multiproc $threads -c $ingestConfigFile
-	rm -rf "/source_storage/tmp/"
+	rm -rf "/datasets_storage/tmp/"
 
 else
 	echo "El comando ha sido mal especificado por favor revise el comando y vuelva a intentarlo"
-    echo "nohup ./IngestBatch.sh /source_storage/LS7_ETM_LEDAPS/ /dc_storage/LS7_ETM_LEDAPS/ingest_file.yml /dc_storage/LS7_ETM_LEDAPS/mgen_script.py"
+    echo "nohup ./IngestBatch.sh /datasets_storage/LS8_ETM_LEDAPS/ ../products/LS8_OLI_LASRC/ingest_file.yml ../products/LS8_OLI_LASRC/mgen_script.py"
 fi
