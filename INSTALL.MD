@@ -215,7 +215,7 @@ Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual
 cp -r open-datacube-bac/explorer .
 ```
 
-Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestado en el cubo de datos. Cuando tenga datos que cumplan con el requerimiento anterior, puede ejecutar el comando siguiente para generar la visualización del contendo disponible en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental.
+**NOTA: Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualziación de vistas periódica.** 
 
 Cree un **cronjob** para automatizar el proceso de generación de vistas del Open Data Cube.
 
