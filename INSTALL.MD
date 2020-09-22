@@ -192,7 +192,7 @@ Ejecute el siguiente comando pasa salir del contenedor **datacube**
 datacube@487239d46d68:~$ exit
 ```
 
-Ingrese a la siguiente URL http://<ip-cube-server>:8081/ para acceder a la interfaz de Jupyter Noternotebooks e inicar el desarrollo de algoirtmos.
+Ingrese a la siguiente URL **http://[ip-cube-server]:8081/** para acceder a la interfaz de Jupyter Noternotebooks e inicar el desarrollo de algoirtmos.
 
 
 ### Configuración Componente Explorer
@@ -215,7 +215,7 @@ Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual
 cp -r open-datacube-bac/explorer .
 ```
 
-**NOTA: Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualziación de vistas periódica.** 
+**NOTA:** Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualziación de vistas periódica.
 
 Cree un **cronjob** para automatizar el proceso de generación de vistas del Open Data Cube.
 
@@ -261,7 +261,7 @@ Inicie el servicio `cron` usando el siguiente comando. Cada que el contenedor se
 sudo cron 
 ```
 
-Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL http://<ip-cube-server>:8080/ para acceder a la interfaz de visualización del contenido del Open Dat Cube.
+Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL **http://[ip-cube-server]:8080/** para acceder a la interfaz de visualización del contenido del Open Dat Cube.
 
 ## Referencias 
 
