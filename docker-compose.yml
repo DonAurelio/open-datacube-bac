@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=datacube
       - POSTGRES_PASSWORD=datacube
     volumes:
-      - /database_storage:/var/lib/postgresql/data
+      - /mnt/database_storage:/var/lib/postgresql/data
 
   explorer:
     image: donaurelio/datacube:1.8.2-explorer
@@ -39,8 +39,8 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - /datasets_storage:/datasets_storage
-      - /ingested_storage:/ingested_storage
+      - /mnt/datasets_storage:/datasets_storage
+      - /mnt/ingested_storage:/ingested_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -59,9 +59,9 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - /analysis_storage:/analysis_storage
-      - /datasets_storage:/datasets_storage
-      - /ingested_storage:/ingested_storage
+      - /mnt/analysis_storage:/analysis_storage
+      - /mnt/datasets_storage:/datasets_storage
+      - /mnt/ingested_storage:/ingested_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
