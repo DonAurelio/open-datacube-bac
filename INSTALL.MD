@@ -98,13 +98,13 @@ sudo chown -R :1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_st
 Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
 
 ```sh 
-chmod 775 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo chmod 775 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
 ```
 
 Asegurarse de que el contenido generado en los directorios `/mnt/datasets_storage` `/mnt/ingested_storage` `/mnt/analysis_storage` y `/mnt/database_storage` mantegan hereden los permisos concedidos al grupo `bac`. 
 
 ```sh
-chmod g+s /mnt/datasets_storage/
+sudo chmod g+s /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
 ```
 
 Clone el siguiente repositorio.
@@ -113,11 +113,11 @@ Clone el siguiente repositorio.
 git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
 
-Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
+<!-- Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
 
 ```sh 
 cp -r open-datacube-bac/datacube/datasets_storage/* /mnt/datasets_storage
-```
+``` -->
 
 ### Despliegue de Contenedores
 
@@ -164,7 +164,7 @@ sudo groupadd --gid 1024 bac
 Añadir el usuario actual al gropu `bac`
 
 ```sh 
-sudo usermod -aG bac $USER
+sudo usermod -aG bac datacube
 ```
 
 Use el comando mostrado a continuación para inicializar la base de datos del cubo de datos. Este paso se hace una única vez para la creación del esquema de datos que usa el ODC para indexar imágenes de satelite. 
