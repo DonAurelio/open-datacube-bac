@@ -71,11 +71,40 @@ docker-compose version 1.25.0, build 0a186604
 
 ### Configuración Esquema de Directorios
 
+Crear un nuevo grupo
+
+```sh 
+sudo groupadd --gid 1024 bac
+```
+
+Añadir el usuario actual al gropu `bac`
+
+```sh 
+sudo usermod -aG bac $USER
+```
+
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
 ```sh 
 sudo mkdir /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
-sudo chown $USER:root /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+```
+
+Asignar los directorios al gropu `bac (GID=1024)`.
+
+```sh 
+sudo chown -R :1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+```
+
+Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
+
+```sh 
+chmod 775 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+```
+
+Asegurarse de que el contenido generado en los directorios `/mnt/datasets_storage` `/mnt/ingested_storage` `/mnt/analysis_storage` y `/mnt/database_storage` mantegan hereden los permisos concedidos al grupo `bac`. 
+
+```sh
+chmod g+s /mnt/datasets_storage/
 ```
 
 Clone el siguiente repositorio.
@@ -87,7 +116,7 @@ git clone https://github.com/DonAurelio/open-datacube-bac.git
 Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
 
 ```sh 
-cp -r open-datacube-bac/datasets_storage/* /mnt/datasets_storage
+cp -r open-datacube-bac/datacube/datasets_storage/* /mnt/datasets_storage
 ```
 
 ### Despliegue de Contenedores
@@ -119,10 +148,23 @@ open-datacube-bac_ingestor_1   entrypoint.sh tail -F /hom ...   Up      0.0.0.0:
 
 ### Configuración Componente datacube
 
+
 Ingrese al contenedor **datacube**
 
 ```sh
 docker-compose exec datacube bash
+```
+
+Crear un nuevo grupo
+
+```sh 
+sudo groupadd --gid 1024 bac
+```
+
+Añadir el usuario actual al gropu `bac`
+
+```sh 
+sudo usermod -aG bac $USER
 ```
 
 Use el comando mostrado a continuación para inicializar la base de datos del cubo de datos. Este paso se hace una única vez para la creación del esquema de datos que usa el ODC para indexar imágenes de satelite. 
@@ -266,3 +308,4 @@ Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl
 ## Referencias 
 
 1. [DNS Not Resolving under Network [CentOS8]](https://github.com/docker/for-linux/issues/957)
+2. [Docker volumes and file system permissions](https://medium.com/@nielssj/docker-volumes-and-file-system-permissions-772c1aee23ca)
