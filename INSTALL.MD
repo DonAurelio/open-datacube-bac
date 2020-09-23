@@ -107,12 +107,12 @@ Asegurarse de que el contenido generado en los directorios `/mnt/datasets_storag
 sudo chmod g+s /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
 ```
 
-Clone el siguiente repositorio.
+<!-- Clone el siguiente repositorio.
 
 ```sh 
 git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
-
+ -->
 <!-- Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
 
 ```sh 
@@ -120,6 +120,12 @@ cp -r open-datacube-bac/datacube/datasets_storage/* /mnt/datasets_storage
 ``` -->
 
 ### Despliegue de Contenedores
+
+Clone el siguiente repositorio.
+
+```sh 
+git clone https://github.com/DonAurelio/open-datacube-bac.git
+```
 
 Ingrese al directorio `open-datacube-bac`
 
