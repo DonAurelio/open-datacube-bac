@@ -92,7 +92,7 @@ sudo mkdir /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mn
 Asignar los directorios al gropu `bac (GID=1024)`.
 
 ```sh 
-sudo chown -R :1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo chown -R $USER:1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
 ```
 
 Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
