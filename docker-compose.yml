@@ -60,7 +60,7 @@ services:
     tty: true
     volumes:
       - /mnt/analysis_storage:/analysis_storage
-      - datasets_storage:/datasets_storage
+      - /mnt/datasets_storage:/datasets_storage
       - /mnt/ingested_storage:/ingested_storage
     environment:
       - DB_DATABASE=datacube 
@@ -77,12 +77,3 @@ services:
       - "8081:8081"
       # SSH port
       - "2222:22"
-
-
-volumes: 
-  datasets_storage:
-      driver: local
-      driver_opts:
-        type: none
-        device: /mnt/datasets_storage
-        o: bind
