@@ -155,7 +155,7 @@ open-datacube-bac_ingestor_1   entrypoint.sh tail -F /hom ...   Up      0.0.0.0:
 Asignar los directorios al gropu `bac (GID=1024)`.
 
 ```sh 
-sudo chown -R $USER:1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo chown -R $USER:1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage
 ```
 
 ### Configuración Componente datacube
