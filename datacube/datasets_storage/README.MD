@@ -1,3 +1,3 @@
-# Satellite Image Datasets Storage
+# Datasets Storage
 
 Satellite image datasets will be located here. 
