@@ -71,53 +71,17 @@ docker-compose version 1.25.0, build 0a186604
 
 ### Configuración Esquema de Directorios
 
-Crear un nuevo grupo
-
-```sh 
-sudo groupadd --gid 1024 bac
-```
-
-Añadir el usuario actual al gropu `bac`
-
-```sh 
-sudo usermod -aG bac $USER
-```
-
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
 ```sh 
-sudo mkdir /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo mkdir /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
 Asignar los directorios al gropu `bac (GID=1024)`.
 
 ```sh 
-sudo chown -R $USER:1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
+sudo chmod -R 777 /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
-
-Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
-
-```sh 
-sudo chmod 775 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
-```
-
-Asegurarse de que el contenido generado en los directorios `/mnt/datasets_storage` `/mnt/ingested_storage` `/mnt/analysis_storage` y `/mnt/database_storage` mantegan hereden los permisos concedidos al grupo `bac`. 
-
-```sh
-sudo chmod g+s /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage /mnt/database_storage
-```
-
-<!-- Clone el siguiente repositorio.
-
-```sh 
-git clone https://github.com/DonAurelio/open-datacube-bac.git
-```
- -->
-<!-- Copie los archivos de definición y configuración de la carpeta `datasets_storage`.
-
-```sh 
-cp -r open-datacube-bac/datacube/datasets_storage/* /mnt/datasets_storage
-``` -->
 
 ### Despliegue de Contenedores
 
@@ -150,12 +114,6 @@ open-datacube-bac_database_1   docker-entrypoint.sh postgres    Up      5432/tcp
 open-datacube-bac_datacube_1   entrypoint.sh bash -c cd / ...   Up      0.0.0.0:2222->22/tcp, 0.0.0.0:8081->8081/tcp
 open-datacube-bac_explorer_1   entrypoint.sh gunicorn -b  ...   Up      0.0.0.0:2220->22/tcp, 0.0.0.0:8080->8080/tcp
 open-datacube-bac_ingestor_1   entrypoint.sh tail -F /hom ...   Up      0.0.0.0:2221->22/tcp  
-```
-
-Asignar los directorios al gropu `bac (GID=1024)`.
-
-```sh 
-sudo chown -R $USER:1024 /mnt/datasets_storage /mnt/ingested_storage /mnt/analysis_storage
 ```
 
 ### Configuración Componente datacube

@@ -39,8 +39,8 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - /mnt/datasets_storage:/datasets_storage
-      - /mnt/ingested_storage:/ingested_storage
+      - /datasets_storage:/datasets_storage
+      - /ingested_storage:/ingested_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -59,9 +59,9 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - /mnt/analysis_storage:/analysis_storage
-      - /mnt/datasets_storage:/datasets_storage
-      - /mnt/ingested_storage:/ingested_storage
+      - /analysis_storage:/analysis_storage
+      - /datasets_storage:/datasets_storage
+      - /ingested_storage:/ingested_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
