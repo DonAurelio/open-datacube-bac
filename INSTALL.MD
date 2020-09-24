@@ -77,10 +77,30 @@ Use los siguientes comandos para crear el esquema de directorios para el ODC.
 sudo mkdir /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
-Asignar los directorios al gropu `bac (GID=1024)`.
+Verificar los permisos de los directorios creados.
+
+```sh 
+ll /
+
+drwxr-xr-x.   2 root root  4096 sep 24 18:49 analysis_storage
+...
+drwxr-xr-x.   2 root root  4096 sep 24 18:49 database_storage
+drwxr-xr-x.   2 root root  4096 sep 24 18:49 datasets_storage
+```
+
+Cambiar los permisos a los directorios.
 
 ```sh 
 sudo chmod -R 777 /datasets_storage /ingested_storage /analysis_storage /database_storage
+```
+
+Verificar si los permisos de los directorios cambiaron
+
+```sh 
+drwxrwxrwx.   2 root root  4096 sep 24 18:49 analysis_storage
+...
+drwxrwxrwx.   2 root root  4096 sep 24 18:49 database_storage
+drwxrwxrwx.   2 root root  4096 sep 24 18:49 datasets_storage
 ```
 
 ### Despliegue de Contenedores
