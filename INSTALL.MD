@@ -69,7 +69,45 @@ docker-compose -version
 docker-compose version 1.25.0, build 0a186604
 ```
 
+Edite el archivo `/etc/firewalld/firewalld.conf`  y cambie la linea `FirewallBackend=nftables` por `FirewallBackend=iptables`.
+
+```sh 
+sudo nano /etc/firewalld/firewalld.conf
+
+# FirewallBackend
+# Selects the firewall backend implementation.
+# Choices are:
+#       - nftables (default)
+#       - iptables (iptables, ip6tables, ebtables and ipset)
+#FirewallBackend=nftables
+FirewallBackend=iptables
+```
+
+Reinicie el Firewall y vuelva a aplicar el comando `datacube system init`
+
+```sh 
+sudo systemctl restart firewalld.service
+```
+
 ### Configuración Esquema de Directorios
+
+Crear un nuevo grupo bac, donde bac hace alusión a Banco Agrario de Colombia.
+
+```sh 
+sudo groupadd --gid 1024 bac
+```
+
+Añadir el usuario actual al grupo `bac`.
+
+```sh 
+sudo usermod -aG bac $USER
+```
+
+Cambiar el grupo primario (o por defecto) del usuario actual.
+
+```sh 
+sudo usermod -g bac $USER
+```
 
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
@@ -77,30 +115,16 @@ Use los siguientes comandos para crear el esquema de directorios para el ODC.
 sudo mkdir /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
-Verificar los permisos de los directorios creados.
+Asignar los directorios al grupo `bac (GID=1024)`.
 
 ```sh 
-ll /
-
-drwxr-xr-x.   2 root root  4096 sep 24 18:49 analysis_storage
-...
-drwxr-xr-x.   2 root root  4096 sep 24 18:49 database_storage
-drwxr-xr-x.   2 root root  4096 sep 24 18:49 datasets_storage
+sudo chown -R $USER:bac /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
-Cambiar los permisos a los directorios.
+Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
 
 ```sh 
-sudo chmod -R 777 /datasets_storage /ingested_storage /analysis_storage /database_storage
-```
-
-Verificar si los permisos de los directorios cambiaron
-
-```sh 
-drwxrwxrwx.   2 root root  4096 sep 24 18:49 analysis_storage
-...
-drwxrwxrwx.   2 root root  4096 sep 24 18:49 database_storage
-drwxrwxrwx.   2 root root  4096 sep 24 18:49 datasets_storage
+sudo chmod 775 /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
 ### Despliegue de Contenedores
@@ -111,19 +135,19 @@ Clone el siguiente repositorio.
 git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
 
-Ingrese al directorio `open-datacube-bac`
+Ingrese al directorio `open-datacube-bac`.
 
 ```sh 
 cd open-datacube-bac
 ```
 
-Inicie los servicios (contenedores)
+Inicie los servicios (contenedores).
 
 ```sh
 docker-compose up -d 
 ```
 
-Verifique el estado de los servicios, observe que `State` debe ser `Up` para cada contenedor
+Verifique el estado de los servicios, observe que `State` debe ser `Up` para cada contenedor.
 
 ```sh
 docker-compose ps
@@ -145,16 +169,22 @@ Ingrese al contenedor **datacube**
 docker-compose exec datacube bash
 ```
 
-Crear un nuevo grupo
+Crear un nuevo grupo.
 
 ```sh 
-sudo groupadd --gid 1024 bac
+datacube@487239d46d68:~$ sudo groupadd --gid 1024 bac
 ```
 
-Añadir el usuario actual al gropu `bac`
+Añadir el usuario actual al grupo `bac`
 
 ```sh 
-sudo usermod -aG bac datacube
+datacube@487239d46d68:~$ sudo usermod -aG bac datacube
+```
+
+Cambiar el grupo primario (o por defecto) del usuario actual.
+
+```sh 
+datacube@487239d46d68:~$ sudo usermod -g bac $USER
 ```
 
 Use el comando mostrado a continuación para inicializar la base de datos del cubo de datos. Este paso se hace una única vez para la creación del esquema de datos que usa el ODC para indexar imágenes de satelite. 
@@ -166,40 +196,6 @@ Initialising database...
 Created.
 Checking indexes/views.
 Done.
-```
-
-Si al usar el comando `datacube system init` obtiene el error mostrado abajo, entonces realice la configuración mostrada a continuación.
-
-```sh 
-  File "/usr/local/lib/python3.6/dist-packages/sqlalchemy/engine/strategies.py", line 114, in connect
-    return dialect.connect(*cargs, **cparams)
-  File "/usr/local/lib/python3.6/dist-packages/sqlalchemy/engine/default.py", line 493, in connect
-    return self.dbapi.connect(*cargs, **cparams)
-  File "/usr/local/lib/python3.6/dist-packages/psycopg2/__init__.py", line 127, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not connect to server: No route to host
-	Is the server running on host "database" (172.19.0.2) and accepting
-	TCP/IP connections on port 5432?
-```
-
-Edite el archivo `/etc/firewalld/firewalld.conf`  y cambie la linea `FirewallBackend=nftables` por `FirewallBackend=iptables`.
-
-```sh 
-sudo nano /etc/firewalld/firewalld.conf
-
-# FirewallBackend
-# Selects the firewall backend implementation.
-# Choices are:
-#       - nftables (default)
-#       - iptables (iptables, ip6tables, ebtables and ipset)
-#FirewallBackend=nftables
-FirewallBackend=iptables
-```
-
-Reinicie el Firewall y vuelva a aplicar el comando `datacube system init`
-
-```sh 
-sudo systemctl restart firewalld.service
 ```
 
 Verfifique que el cubo de datos ha sido correctamente configurado usando el siguiente comando.
@@ -238,13 +234,13 @@ docker-compose exec explorer bash
 Clone el siguiente repositorio.
 
 ```sh 
-git clone https://github.com/DonAurelio/open-datacube-bac.git
+datacube@740a61c3df3c:~$ git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
 
 Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual 
 
 ```sh
-cp -r open-datacube-bac/explorer .
+datacube@740a61c3df3c:~$ cp -r open-datacube-bac/explorer .
 ```
 
 **NOTA:** Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualziación de vistas periódica.
@@ -252,7 +248,7 @@ cp -r open-datacube-bac/explorer .
 Cree un **cronjob** para automatizar el proceso de generación de vistas del Open Data Cube.
 
 ```sh
-crontab -e
+datacube@740a61c3df3c:~$ crontab -e
 ```
 
 Coloque **solo una** de las siguientes lineas al final del archivo para programar la tarea periódica de actualización de las visualizaciones del Open Data Cube.
@@ -290,10 +286,17 @@ Coloque **solo una** de las siguientes lineas al final del archivo para programa
 Inicie el servicio `cron` usando el siguiente comando. Cada que el contenedor sea reiniciado, debe volver a ejecutar el comando. 
 
 ```sh 
-sudo cron 
+datacube@740a61c3df3c:~$ sudo cron 
 ```
 
 Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL **http://[ip-cube-server]:8080/** para acceder a la interfaz de visualización del contenido del Open Dat Cube.
+
+
+Ejecute el siguiente comando pasa salir del contenedor **explorer**
+
+```sh 
+datacube@740a61c3df3c:~$ exit
+```
 
 ## Referencias 
 
