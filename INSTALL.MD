@@ -2,15 +2,43 @@
 
 A continuación se presentan los pasos requeridos para el despliegue del cubo de datos.
 
-### Instalación de Requerimientos (CentOS 8)
+### Requerimientos
 
-Instalación de Git
+* Sistema Operativo CentOS 8 o RetHat.
+
+### Instalación de Requerimientos
+
+Crear el usuario datacube.
+
+```sh 
+sudo adduser --uid 1024 --disabled-password --gecos "" datacube
+```
+
+Asignar la contraseña al usuario.
+
+```sh 
+sudo echo "datacube:datacube" | chpasswd
+```
+
+Asignar permisos de superusuario al usuarios **datacube**.
+
+```sh 
+sudo usermod -aG sudo datacube
+```
+
+Iniciar sesión con el usuario **datacube**.
+
+```sh 
+sudo su datacube
+```
+
+Instalación de Git.
 
 ```sh 
 sudo dnf install -y git
 ```
 
-Instalación de Docker
+Instalación de Docker.
 
 ```sh 
 sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
@@ -25,6 +53,9 @@ Reinicie el sistema
 ```sh 
 sudo reboot now
 ```
+
+Inicie sesión con el **usuario:datacube** y **contraseña:datacube**.
+
 
 Verifique que Docker funcione correctamente
 
@@ -91,40 +122,16 @@ sudo systemctl restart firewalld.service
 
 ### Configuración Esquema de Directorios
 
-Crear un nuevo grupo bac, donde bac hace alusión a Banco Agrario de Colombia.
-
-```sh 
-sudo groupadd --gid 1024 bac
-```
-
-Añadir el usuario actual al grupo `bac`.
-
-```sh 
-sudo usermod -aG bac $USER
-```
-
-Cambiar el grupo primario (o por defecto) del usuario actual.
-
-```sh 
-sudo usermod -g bac $USER
-```
-
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
 ```sh 
 sudo mkdir /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
-Asignar los directorios al grupo `bac (GID=1024)`.
+Asignar cambiar el propietario de los directorios.
 
 ```sh 
-sudo chown -R $USER:bac /datasets_storage /ingested_storage /analysis_storage /database_storage
-```
-
-Cambiar permisos para permitir acceso a los usuarios que pertenecen al grupo `bac`.
-
-```sh 
-sudo chmod 775 /datasets_storage /ingested_storage /analysis_storage /database_storage
+sudo chown -R $USER:$USER /datasets_storage /ingested_storage /analysis_storage /database_storage
 ```
 
 ### Despliegue de Contenedores
@@ -167,24 +174,6 @@ Ingrese al contenedor **datacube**
 
 ```sh
 docker-compose exec datacube bash
-```
-
-Crear un nuevo grupo.
-
-```sh 
-datacube@487239d46d68:~$ sudo groupadd --gid 1024 bac
-```
-
-Añadir el usuario actual al grupo `bac`
-
-```sh 
-datacube@487239d46d68:~$ sudo usermod -aG bac datacube
-```
-
-Cambiar el grupo primario (o por defecto) del usuario actual.
-
-```sh 
-datacube@487239d46d68:~$ sudo usermod -g bac $USER
 ```
 
 Use el comando mostrado a continuación para inicializar la base de datos del cubo de datos. Este paso se hace una única vez para la creación del esquema de datos que usa el ODC para indexar imágenes de satelite. 

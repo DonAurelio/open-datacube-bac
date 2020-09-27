@@ -21,6 +21,7 @@ ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
 RUN apt-get -y update \
     && apt-get install -y \
     build-essential \
+    openssh-server \
     python3-dev \
     python3-pip \
     python3-gdal \
@@ -37,12 +38,12 @@ RUN apt-get -y update \
     sudo \
     git \
     wget \
-    && adduser --disabled-password --gecos "" datacube \
+    && adduser --uid 1024 --disabled-password --gecos "" datacube \
     && echo "datacube:datacube" | chpasswd \
     && usermod -aG sudo datacube \
     && chown datacube:datacube /home/datacube \
-    && mkdir /datasets_storage /ingested_storage \
-    && chown datacube:root /datasets_storage /ingested_storage \
+    && mkdir /datasets_storage /ingested_storage /analysis_storage /database_storage\
+    && chown datacube:datacube /datasets_storage /ingested_storage /analysis_storage /database_storage \
     && sudo echo "datacube ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
     && sudo -k \
     && su datacube \
@@ -50,7 +51,6 @@ RUN apt-get -y update \
     && pip3 install datacube==1.8.2 \
     && pip3 install setuptools==42 'numpy>=1.15' shapely jupyter
         # 'numpy>=1.15' shapely rasterio python-dateutil pyyaml jupyter
-
 
 WORKDIR /home/datacube
 

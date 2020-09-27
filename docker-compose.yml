@@ -12,7 +12,7 @@ services:
       - /database_storage:/var/lib/postgresql/data
 
   explorer:
-    image: donaurelio/datacube:1.8.2-explorer
+    image: donaurelio/datacube-bac:1.8.2-explorer
     ports:
       # Explorer port
       - "8080:8080"
@@ -34,7 +34,7 @@ services:
       - database
 
   ingestor:
-    image: donaurelio/datacube:1.8.2
+    image: donaurelio/datacube-bac:1.8.2
     restart: on-failure
     tty: true
     volumes:

@@ -1,5 +1,5 @@
 # Base image
-FROM donaurelio/datacube:1.8.2
+FROM donaurelio/datacube-bac:1.8.2
 
 # Image propietary
 LABEL maintainer="Aurelio Vivas aa.vivas@uniandes.edu.co"
