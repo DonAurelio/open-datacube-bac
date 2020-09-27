@@ -167,8 +167,7 @@ open-datacube-bac_explorer_1   entrypoint.sh gunicorn -b  ...   Up      0.0.0.0:
 open-datacube-bac_ingestor_1   entrypoint.sh tail -F /hom ...   Up      0.0.0.0:2221->22/tcp  
 ```
 
-### Configuración Componente datacube
-
+### Configuración Componente "datacube"
 
 Ingrese al contenedor **datacube**
 
@@ -203,6 +202,12 @@ Index Driver:  default
 Valid connection:	YES
 ```
 
+Iniciar el servicio de ssh
+
+```sh 
+sudo service ssh start
+```
+
 Ejecute el siguiente comando pasa salir del contenedor **datacube**
 
 ```sh 
@@ -212,7 +217,7 @@ datacube@487239d46d68:~$ exit
 Ingrese a la siguiente URL **http://[ip-cube-server]:8081/** para acceder a la interfaz de Jupyter Noternotebooks e inicar el desarrollo de algoirtmos.
 
 
-### Configuración Componente Explorer
+### Configuración Componente "explorer"
 
 Ingrese al contenedor **explorer**
 
@@ -280,8 +285,31 @@ datacube@740a61c3df3c:~$ sudo cron
 
 Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL **http://[ip-cube-server]:8080/** para acceder a la interfaz de visualización del contenido del Open Dat Cube.
 
+Iniciar el servicio de ssh
 
+```sh 
+sudo service ssh start
+```
 Ejecute el siguiente comando pasa salir del contenedor **explorer**
+
+```sh 
+datacube@740a61c3df3c:~$ exit
+```
+### Configuración Componente "ingestor"
+
+Ingrese al contenedor **ingestor**
+
+```sh
+docker-compose exec ingestor bash
+```
+
+Iniciar el servicio de ssh
+
+```sh 
+datacube@740a61c3df3c:~$ sudo service ssh start
+```
+
+Ejecute el siguiente comando pasa salir del contenedor **ingestor**
 
 ```sh 
 datacube@740a61c3df3c:~$ exit
