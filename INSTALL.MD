@@ -315,6 +315,26 @@ Ejecute el siguiente comando pasa salir del contenedor **ingestor**
 datacube@740a61c3df3c:~$ exit
 ```
 
+### Configuración Componente "database"
+
+Ingrese al contenedor **database**
+
+```sh
+docker-compose exec database bash
+```
+
+Iniciar el servicio de ssh
+
+```sh 
+datacube@740a61c3df3c:~$ sudo service ssh start
+```
+
+Ejecute el siguiente comando pasa salir del contenedor **database**
+
+```sh 
+datacube@740a61c3df3c:~$ exit
+```
+
 ## Referencias 
 
 1. [DNS Not Resolving under Network [CentOS8]](https://github.com/docker/for-linux/issues/957)
