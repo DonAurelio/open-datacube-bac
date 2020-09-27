@@ -11,7 +11,7 @@ A continuación se presentan los pasos requeridos para el despliegue del cubo de
 Crear el usuario datacube.
 
 ```sh 
-sudo adduser --uid 1024 --disabled-password --gecos "" datacube
+sudo adduser --uid 1024 datacube
 ```
 
 Asignar la contraseña al usuario.
