@@ -205,16 +205,16 @@ Valid connection:	YES
 Iniciar el servicio de ssh
 
 ```sh 
-sudo service ssh start
+datacube@487239d46d68:~$ sudo service ssh start
 ```
 
-Ejecute el siguiente comando pasa salir del contenedor **datacube**
+Ejecute el siguiente comando para salir del contenedor **datacube**
 
 ```sh 
 datacube@487239d46d68:~$ exit
 ```
 
-Ingrese a la siguiente URL **http://[ip-cube-server]:8081/** para acceder a la interfaz de Jupyter Noternotebooks e inicar el desarrollo de algoirtmos.
+Ingrese a la siguiente URL **http://[ip-cube-server]:8081/** para acceder a la interfaz de Jupyter Notebooks e inicar el desarrollo de algoirtmos.
 
 
 ### Configuración Componente "explorer"
@@ -231,13 +231,13 @@ Clone el siguiente repositorio.
 datacube@740a61c3df3c:~$ git clone https://github.com/DonAurelio/open-datacube-bac.git
 ```
 
-Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual 
+Copiar la carpeta `open-datacube-bac/explorer` en la ubicación actual. 
 
 ```sh
 datacube@740a61c3df3c:~$ cp -r open-datacube-bac/explorer .
 ```
 
-**NOTA:** Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualziación de vistas periódica.
+**NOTA:** Para habilitar la visualización de unidades de almacenamiento debe tener datos indexados o ingestados en el cubo de datos. Esta visualización debe ser generada de manera periódica con el objetivo de actualizar esta visualización con el contenido que se agrega de forma incremental. A continuación se muestran los pasos para crear una tarea de actualización de vistas periódicas.
 
 Cree un **cronjob** para automatizar el proceso de generación de vistas del Open Data Cube.
 
@@ -245,7 +245,7 @@ Cree un **cronjob** para automatizar el proceso de generación de vistas del Ope
 datacube@740a61c3df3c:~$ crontab -e
 ```
 
-Coloque **solo una** de las siguientes lineas al final del archivo para programar la tarea periódica de actualización de las visualizaciones del Open Data Cube.
+Coloque **sólo una** de las siguientes líneas al final del archivo para programar la tarea periódica de actualización de las visualizaciones del Open Data Cube.
 
 * Cada Minuto: `*/1 * * * * /bin/bash /home/datacube/explorer/cubedash.sh`
 * Cada Hora: `0 * * * * /bin/bash /home/datacube/explorer/cubedash.sh`
@@ -283,7 +283,7 @@ Inicie el servicio `cron` usando el siguiente comando. Cada que el contenedor se
 datacube@740a61c3df3c:~$ sudo cron 
 ```
 
-Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir. Ingrese a la siguiente URL **http://[ip-cube-server]:8080/** para acceder a la interfaz de visualización del contenido del Open Dat Cube.
+Presione la tecla Cntrl+O y luego Enter para guardar. Finalmente presiones Cntrl+X para salir.
 
 Iniciar el servicio de ssh
 
@@ -295,9 +295,12 @@ Ejecute el siguiente comando pasa salir del contenedor **explorer**
 ```sh 
 datacube@740a61c3df3c:~$ exit
 ```
+
+**NOTA:** Ingrese a la siguiente URL **http://[ip-cube-server]:8080/** para acceder a la interfaz de visualización del contenido del Open Data Cube.
+
 ### Configuración Componente "ingestor"
 
-Ingrese al contenedor **ingestor**
+Ingrese al contenedor **ingestor**.
 
 ```sh
 docker-compose exec ingestor bash
@@ -309,7 +312,7 @@ Iniciar el servicio de ssh
 datacube@740a61c3df3c:~$ sudo service ssh start
 ```
 
-Ejecute el siguiente comando pasa salir del contenedor **ingestor**
+Ejecute el siguiente comando para salir del contenedor **ingestor**
 
 ```sh 
 datacube@740a61c3df3c:~$ exit
