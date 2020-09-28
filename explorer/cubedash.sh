@@ -35,7 +35,7 @@ echo "$(date): Running cubedash-gen"
 
 echo "$(date): Running cubedash-gen" >> /home/datacube/explorer/cubedash.log
 
-/home/datacube/miniconda3/bin/cubedash-gen --init --all 1>> /home/datacube/explorer/cubedash.log 2>> /home/datacube/explorer/cubedash.log
+/home/datacube/miniconda3/bin/cubedash-gen --force-refresh s2_sen2cor_ard_granule_EO3 1>> /home/datacube/explorer/cubedash.log 2>> /home/datacube/explorer/cubedash.log
 
 echo "$(date): Finished cubedash-gen" >> /home/datacube/explorer/cubedash.log
 

@@ -225,6 +225,12 @@ Ingrese al contenedor **explorer**
 docker-compose exec explorer bash
 ```
 
+Crear la base de datos del Data Cube Explorer.
+
+```sh 
+cubedash-gen --init --all
+```
+
 Clone el siguiente repositorio.
 
 ```sh 
