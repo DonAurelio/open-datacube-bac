@@ -100,7 +100,7 @@ docker-compose -version
 docker-compose version 1.25.0, build 0a186604
 ```
 
-Edite el archivo `/etc/firewalld/firewalld.conf`  y cambie la linea `FirewallBackend=nftables` por `FirewallBackend=iptables`.
+Edite el archivo `/etc/firewalld/firewalld.conf`  y cambie la línea `FirewallBackend=nftables` por `FirewallBackend=iptables`.
 
 ```sh 
 sudo nano /etc/firewalld/firewalld.conf
@@ -114,7 +114,7 @@ sudo nano /etc/firewalld/firewalld.conf
 FirewallBackend=iptables
 ```
 
-Reinicie el Firewall y vuelva a aplicar el comando `datacube system init`
+Reinicie el Firewall.
 
 ```sh 
 sudo systemctl restart firewalld.service
