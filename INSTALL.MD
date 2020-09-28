@@ -186,7 +186,7 @@ Checking indexes/views.
 Done.
 ```
 
-Verfifique que el cubo de datos ha sido correctamente configurado usando el siguiente comando.
+Verifique que el cubo de datos ha sido correctamente configurado usando el siguiente comando.
 
 ```sh 
 datacube@487239d46d68:~$ datacube system check
