@@ -125,13 +125,13 @@ sudo systemctl restart firewalld.service
 Use los siguientes comandos para crear el esquema de directorios para el ODC.
 
 ```sh 
-sudo mkdir /indexed_storage /download_storage /analysis_storage /database_storage
+sudo mkdir /datacube_storage/indexed_storage /datacube_storage/download_storage /datacube_storage/analysis_storage /datacube_storage/database_storage
 ```
 
 Asignar cambiar el propietario de los directorios.
 
 ```sh 
-sudo chown -R $USER:$USER /indexed_storage /download_storage /analysis_storage /database_storage
+sudo chown -R $USER:$USER /datacube_storage/indexed_storage /datacube_storage/download_storage /datacube_storage/analysis_storage /datacube_storage/database_storage
 ```
 
 ### Despliegue de Contenedores
