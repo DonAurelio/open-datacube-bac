@@ -52,7 +52,7 @@ services:
       tail -F /home/datacube/.datacube.conf
 
     ports:
-      SSH port
+      # SSH port
       - "2221:22"
 
   datacube:
