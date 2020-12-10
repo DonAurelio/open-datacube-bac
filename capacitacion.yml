@@ -1,0 +1,75 @@
+version: "3"
+services:
+
+  database:
+    image: postgis/postgis:10-2.5
+    restart: on-failure
+    environment:
+      - POSTGRES_DB=datacube
+      - POSTGRES_USER=datacube
+      - POSTGRES_PASSWORD=datacube
+
+  explorer:
+    image: donaurelio/datacube-bac:1.8.2-explorer
+    ports:
+      # Explorer port
+      - "8000-8049:8080"
+    environment:
+      - DB_DATABASE=datacube 
+      - DB_HOSTNAME=database 
+      - DB_USERNAME=datacube 
+      - DB_PASSWORD=datacube 
+      - DB_PORT=5432
+      - FLASK_ENV=deployment
+      - FLASK_APP=cubedash
+      - FLASK_DEBUG=1
+    command: >
+      gunicorn -b '0.0.0.0:8080' -w 1 --timeout 60 cubedash:app
+    
+    depends_on:
+      - database
+
+  ingestor:
+    image: donaurelio/datacube-bac:1.8.2
+    restart: on-failure
+    tty: true
+    volumes:
+      - ./ingestor:/home/datacube/ingestor
+      - /scratch_storage:/scratch_storage
+      - indexed_storage:/indexed_storage
+      - download_storage:/download_storage
+
+    environment:
+      - DB_DATABASE=datacube 
+      - DB_HOSTNAME=database 
+      - DB_USERNAME=datacube 
+      - DB_PASSWORD=datacube 
+    # To keep container alive if no applications is running
+    command: >
+      tail -F /home/datacube/.datacube.conf
+
+  datacube:
+    image: donaurelio/datacube-bac:1.8.2-1.0
+    restart: on-failure
+    tty: true
+    volumes:
+      - /scratch_storage:/scratch_storage
+      - indexed_storage:/indexed_storage
+      - download_storage:/download_storage
+    environment:
+      - DB_DATABASE=datacube 
+      - DB_HOSTNAME=database 
+      - DB_USERNAME=datacube 
+      - DB_PASSWORD=datacube 
+    # To keep container alive if no applications is running
+    # command: tail -F /home/datacube/.datacube.conf
+    command: >
+      bash -c "cd /analysis_storage && jupyter notebook --no-browser --port=8081 --ip=0.0.0.0 --allow-root"
+
+    ports:
+      # Jupyter notebook port
+      - "8050-8100:8081"
+
+volumes:
+  indexed_storage:
+  download_storage:
