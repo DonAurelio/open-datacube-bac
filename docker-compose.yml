@@ -15,9 +15,9 @@ services:
     image: donaurelio/datacube-bac:1.8.2-explorer
     ports:
       # Explorer port
-      - "8080:8080"
+      - "8080"
       # SSH port
-      - "2220:22"
+      # - "2220:22"
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -50,9 +50,9 @@ services:
     command: >
       tail -F /home/datacube/.datacube.conf
 
-    ports:
+    # ports:
       # SSH port
-      - "2221:22"
+      # - "2221:22"
 
   datacube:
     image: donaurelio/datacube-bac:1.8.2
@@ -74,6 +74,6 @@ services:
 
     ports:
       # Jupyter notebook port
-      - "8081:8081"
+      - "8081"
       # SSH port
-      - "2222:22"
+      # - "2222:22"
