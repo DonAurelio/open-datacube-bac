@@ -18,6 +18,7 @@ services:
       - "8000:8080"
       # SSH port
       - "2220:22"
+
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -51,7 +52,7 @@ services:
       tail -F /home/datacube/.datacube.conf
 
     ports:
-      # SSH port
+      SSH port
       - "2221:22"
 
   datacube:
