@@ -9,12 +9,12 @@ services:
       - POSTGRES_USER=datacube
       - POSTGRES_PASSWORD=datacube
     volumes:
-      - /database_storage:/var/lib/postgresql/data
+      - /datacube_storage/database_storage:/var/lib/postgresql/data
 
   explorer:
     image: donaurelio/datacube-bac:1.8.2-explorer
     ports:
-      # Explorer port
+      # default ports
       - "8000:8080"
       # SSH port
       - "2220:22"
@@ -40,8 +40,8 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - /indexed_storage:/indexed_storage
-      - /download_storage:/download_storage
+      - /datacube_storage/indexed_storage:/indexed_storage
+      - /datacube_storage/download_storage:/download_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -60,9 +60,9 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - /analysis_storage:/analysis_storage
-      - /indexed_storage:/indexed_storage
-      - /download_storage:/download_storage
+      - /datacube_storage/analysis_storage:/analysis_storage
+      - /datacube_storage/indexed_storage:/indexed_storage
+      - /datacube_storage/download_storage:/download_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -74,7 +74,9 @@ services:
       bash -c "cd /analysis_storage && jupyter notebook --no-browser --port=8081 --ip=0.0.0.0 --allow-root"
 
     ports:
-      # Jupyter notebook port
-      - "8050-8100:8081"
+      # Default ports
+      - "8081:8081"
+      # Autoscaling ports
+      #- "8050-8100:8081"
       # # SSH port
       # - "2222:22"
