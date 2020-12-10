@@ -37,8 +37,8 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - indexed_storage:/indexed_storage
-      - datacube_storage:/download_storage
+      - ./indexed_storage:/indexed_storage
+      - ./datacube_storage:/download_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -57,9 +57,9 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - analysis_storage:/analysis_storage
-      - indexed_storage:/indexed_storage
-      - download_storage:/download_storage
+      - ./analysis_storage:/analysis_storage
+      - ./indexed_storage:/indexed_storage
+      - ./download_storage:/download_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
