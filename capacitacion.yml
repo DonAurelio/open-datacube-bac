@@ -8,12 +8,14 @@ services:
       - POSTGRES_DB=datacube
       - POSTGRES_USER=datacube
       - POSTGRES_PASSWORD=datacube
+    volumes:
+      - ../database_storage:/var/lib/postgresql/data
 
   explorer:
     image: donaurelio/datacube-bac:1.8.2-explorer
     ports:
       # Explorer port
-      - "8000-8049:8080"
+      - "8000-8010:8080"
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -35,9 +37,8 @@ services:
     tty: true
     volumes:
       - ./ingestor:/home/datacube/ingestor
-      - /scratch_storage:/scratch_storage
-      - indexed_storage:/indexed_storage
-      - download_storage:/download_storage
+      - ../indexed_storage:/indexed_storage
+      - ../download_storage:/download_storage
 
     environment:
       - DB_DATABASE=datacube 
@@ -53,9 +54,9 @@ services:
     restart: on-failure
     tty: true
     volumes:
-      - /scratch_storage:/scratch_storage
-      - indexed_storage:/indexed_storage
-      - download_storage:/download_storage
+      - ../indexed_storage:/indexed_storage
+      - ../download_storage:/download_storage
+      - ../analysis_storage:/analysis_storage
     environment:
       - DB_DATABASE=datacube 
       - DB_HOSTNAME=database 
@@ -68,8 +69,4 @@ services:
 
     ports:
       # Jupyter notebook port
-      - "8050-8100:8081"
-
-volumes:
-  indexed_storage:
-  download_storage:
+      - "8011-8020:8081"
