@@ -27,6 +27,9 @@ services:
       - FLASK_DEBUG=1
     command: >
       gunicorn -b '0.0.0.0:8080' -w 1 --timeout 60 cubedash:app
+     
+    volumes:
+      - ./explorer:/home/datacube/explorer
     
     depends_on:
       - database
