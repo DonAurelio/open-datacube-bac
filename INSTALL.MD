@@ -23,7 +23,7 @@ sudo echo "datacube:datacube" | chpasswd
 Asignar permisos de superusuario al usuarios **datacube**.
 
 ```sh 
-sudo usermod -aG sudo datacube
+sudo usermod -aG wheel datacube
 ```
 
 Iniciar sesión con el usuario **datacube**.
