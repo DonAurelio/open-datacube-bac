@@ -15,7 +15,7 @@ services:
     image: donaurelio/datacube-bac:1.8.2-explorer
     ports:
       # default ports
-      - "8000:8080"
+      - "8080:8080"
       # SSH port
       - "2220:22"
 
@@ -78,5 +78,5 @@ services:
       - "8081:8081"
       # Autoscaling ports
       #- "8050-8100:8081"
-      # # SSH port
-      # - "2222:22"
+      # SSH port
+      - "2222:22"
